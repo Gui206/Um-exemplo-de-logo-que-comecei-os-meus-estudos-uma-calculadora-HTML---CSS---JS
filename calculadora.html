@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e1e2f, #2c3e50);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background-color: #ffffff;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      width: 320px;
+      max-width: 90%;
+    }
+
+    #display {
+      width: 100%;
+      height: 60px;
+      font-size: 28px;
+      border: none;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+      text-align: right;
+      color: #333;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    button {
+      height: 60px;
+      font-size: 22px;
+      border: none;
+      border-radius: 50px;
+      background-color: #e0e0e0;
+      color: #333;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #d4d4d4;
+    }
+
+    button:active {
+      transform: scale(0.95);
+      background-color: #c0c0c0;
+    }
+
+    button.equal {
+      grid-column: span 4;
+      background-color: #4caf50;
+      color: white;
+    }
+
+    button.equal:hover {
+      background-color: #43a047;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" placeholder="Digite a operação" />
+    <div class="buttons">
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('/')">÷</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('*')">×</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('-')">−</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="append('%')">%</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="calculate()" class="equal">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+
+    function append(value) {
+      const lastChar = display.value.slice(-1);
+      if (isOperator(lastChar) && isOperator(value)) {
+        alert("Não é permitido inserir dois operadores seguidos.");
+        return;
+      }
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = '';
+    }
+
+    function isOperator(char) {
+      return /[+\-*/%.]/.test(char);
+    }
+
+    function calculate() {
+      let expression = display.value.trim();
+
+      if (expression === '') {
+        alert("Digite uma operação para calcular.");
+        return;
+      }
+
+      if (/\/0(?!\d)/.test(expression)) {
+        alert("Divisão por zero não é permitida.");
+        return;
+      }
+
+      expression = expression.replace(/(\d+)%/g, (_, num) => `(${num}/100)`);
+
+      const validExpression = /^[0-9+\-*/(). ]+$/;
+      if (!validExpression.test(expression)) {
+        alert("Expressão inválida. Use apenas números e operadores.");
+        return;
+      }
+
+      try {
+        const result = eval(expression);
+        display.value = result;
+      } catch (error) {
+        alert("Erro ao calcular. Verifique a expressão.");
+      }
+    }
+  </script>
+</body>
+</html>
